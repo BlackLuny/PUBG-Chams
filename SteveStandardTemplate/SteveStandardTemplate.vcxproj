@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{A9E47D59-7339-4582-AC43-70CA3C258157}</ProjectGuid>
+    <RootNamespace>SteveStandardTemplate</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>PUBG</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)$(RootNamespace)\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(RootNamespace)\obj\$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>$(WindowsSDK_IncludePath);include\;.\;$(DXSDK_DIR)Include;$(DXSDK_DIR)Lib\x86;$(IncludePath)</IncludePath>
+    <TargetName>$(ProjectName)</TargetName>
+    <LibraryPath>$(DXSDK_DIR)Lib\x64\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)$(RootNamespace)\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)$(RootNamespace)\obj\$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>$(WindowsSDK_IncludePath);include\;.\;$(DXSDK_DIR)Include;$(DXSDK_DIR)Lib\x86;$(IncludePath)</IncludePath>
+    <TargetName>$(ProjectName)</TargetName>
+    <LibraryPath>$(DXSDK_DIR)Lib\x64\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>DEBUG;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PreprocessorDefinitions>RELEASE;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <CreateHotpatchableImage>false</CreateHotpatchableImage>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Interface.hpp" />
+    <ClInclude Include="include\manager\HookManager.hpp" />
+    <ClInclude Include="include\manager\PatternManager.hpp" />
+    <ClInclude Include="include\misc\DataStructure.hpp" />
+    <ClInclude Include="include\misc\FunctionalProgramming.hpp" />
+    <ClInclude Include="include\misc\IJsonSerializable.hpp" />
+    <ClInclude Include="include\misc\Macro.hpp" />
+    <ClInclude Include="include\misc\ProxiedClass.hpp" />
+    <ClInclude Include="include\misc\TemplateMetaprogramming.hpp" />
+    <ClInclude Include="include\misc\TypeAliases.hpp" />
+    <ClInclude Include="include\Singleton.hpp" />
+    <ClInclude Include="include\stdafx.hpp" />
+    <ClInclude Include="include\utility\GameUtility.hpp" />
+    <ClInclude Include="include\utility\Logger.hpp" />
+    <ClInclude Include="include\utility\SystemUtility.hpp" />
+    <ClInclude Include="vendor\fmt\container.h" />
+    <ClInclude Include="vendor\fmt\format.h" />
+    <ClInclude Include="vendor\fmt\ostream.h" />
+    <ClInclude Include="vendor\fmt\posix.h" />
+    <ClInclude Include="vendor\fmt\printf.h" />
+    <ClInclude Include="vendor\fmt\string.h" />
+    <ClInclude Include="vendor\fmt\time.h" />
+    <ClInclude Include="vendor\hash\hash.h" />
+    <ClInclude Include="vendor\minhook\include\MinHook.h" />
+    <ClInclude Include="vendor\minhook\src\buffer.h" />
+    <ClInclude Include="vendor\minhook\src\hde\hde32.h" />
+    <ClInclude Include="vendor\minhook\src\hde\hde64.h" />
+    <ClInclude Include="vendor\minhook\src\hde\pstdint.h" />
+    <ClInclude Include="vendor\minhook\src\hde\table32.h" />
+    <ClInclude Include="vendor\minhook\src\hde\table64.h" />
+    <ClInclude Include="vendor\minhook\src\trampoline.h" />
+    <ClInclude Include="vendor\nlohmann\json.hpp" />
+    <ClInclude Include="vendor\reflective_loader\loader.h" />
+    <ClInclude Include="vendor\XorStr\XorStr.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\DLLMain.cpp" />
+    <ClCompile Include="src\Interface.cpp" />
+    <ClCompile Include="src\manager\HookManager.cpp" />
+    <ClCompile Include="src\manager\PatternManager.cpp" />
+    <ClCompile Include="src\Singleton.cpp" />
+    <ClCompile Include="src\utility\GameUtility.cpp" />
+    <ClCompile Include="src\utility\SystemUtility.cpp" />
+    <ClCompile Include="vendor\fmt\format.cc" />
+    <ClCompile Include="vendor\fmt\ostream.cc" />
+    <ClCompile Include="vendor\fmt\posix.cc" />
+    <ClCompile Include="vendor\fmt\printf.cc" />
+    <ClCompile Include="vendor\minhook\src\buffer.cpp" />
+    <ClCompile Include="vendor\minhook\src\hde\hde32.cpp" />
+    <ClCompile Include="vendor\minhook\src\hde\hde64.cpp" />
+    <ClCompile Include="vendor\minhook\src\hook.cpp" />
+    <ClCompile Include="vendor\minhook\src\trampoline.cpp" />
+    <ClCompile Include="vendor\reflective_loader\loader.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
