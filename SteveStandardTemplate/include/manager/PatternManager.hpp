@@ -10,7 +10,7 @@ namespace SteveBase::Manager {
         static void Init();
 
         static uintptr_t GetPatternImpl(constexpr_hash_t hash);
-        static uintptr_t GetPatternDynamically(string dllName, string pattern);
+        // static uintptr_t GetPatternDynamically(string dllName, string pattern);
     };
 #define GenGetPattern(patternName) compile_time_hash(patternName))
 #define GetPattern(dllName) PatternManager::GetPatternImpl(compile_time_hash(dllName) * GenGetPattern

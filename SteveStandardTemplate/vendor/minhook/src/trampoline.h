@@ -35,6 +35,7 @@
 // 8-bit relative jump.
 typedef struct _JMP_REL_SHORT
 {
+    /* *** */
     UINT8  opcode;      // EB xx: JMP +2+xx
     UINT8  operand;
 } JMP_REL_SHORT, *PJMP_REL_SHORT;
@@ -42,6 +43,7 @@ typedef struct _JMP_REL_SHORT
 // 32-bit direct relative jump/call.
 typedef struct _JMP_REL
 {
+    /* *** */
     UINT8  opcode;      // E9/E8 xxxxxxxx: JMP/CALL +5+xxxxxxxx
     UINT32 operand;     // Relative destination address
 } JMP_REL, *PJMP_REL, CALL_REL;

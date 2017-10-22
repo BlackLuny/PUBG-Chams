@@ -20,7 +20,7 @@ __declspec(noinline) ULONG_PTR caller(VOID) { return (ULONG_PTR)_ReturnAddress()
 
 #ifdef REFLECTIVEDLLINJECTION_VIA_LOADREMOTELIBRARYR
 #pragma code_seg("000")  
-DLLEXPORT NTSTATUS NTAPI add(PCONTEXT ctx, BOOL Alertable)
+DLLEXPORT NTSTATUS NTAPI abc(PCONTEXT ctx, BOOL Alertable)
 #else
 DLLEXPORT ULONG_PTR WINAPI NiggerLoader(VOID)
 #endif

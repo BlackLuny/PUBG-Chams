@@ -14,7 +14,7 @@ namespace SteveBase::Misc {
         using vtable_t = vfunc_t *;
 
         constexpr vtable_t GetVMT() {
-            return *reinterpret_cast<vtable_t*>((uintptr_t)this);
+            return *reinterpret_cast<vtable_t*>((uintptr_t) this);
         }
 
         constexpr vfunc_t GetVFunc(const size_t idx) {
@@ -69,6 +69,4 @@ namespace SteveBase::Misc {
   }
 
 #define PODAccessor(fnName, sig) BeginAccessorBase(fnName, sig) EndAccessorBase
-#define GenNetVarAccessor(tableName, varName) EndAccessorBase(NetVar(tableName, varName))
-#define NetVarAccessor(fnName, sig) BeginAccessorBase(fnName, sig) GenNetVarAccessor
 }

@@ -4,8 +4,11 @@
 #include <numeric>
 #include <string>
 #include <utility>
+#include <memory>
 
 #undef xor
+#undef max
+#undef min
 
 namespace CompileTimeEncryption {
 
@@ -32,7 +35,7 @@ namespace CompileTimeEncryption {
     // since their value are based on the compilation date/time, the moment you clicked build
     // and worst if you do not modify any source file both __DATE__ and __TIME__ will persist
     // because the compiler cached it   
-    constexpr auto seed = forced_value_v<uint32_t, fnv1a(__DATE__ " " __TIME__ " " __FILE__)>;
+    constexpr auto seed = fnv1a(__DATE__ " " __TIME__ " " __FILE__);
 
     constexpr static uint32_t a = 16807; // 7^5
     constexpr static uint32_t m = std::numeric_limits<int32_t>::max(); // 2^31 - 1
@@ -70,7 +73,6 @@ namespace CompileTimeEncryption {
             }
         }
 
-
         // i've added those binary op cause I don't want to see associativity hell
         template<class U, class V>
         constexpr __forceinline U xor (const U a, const V b) const {
@@ -87,160 +89,31 @@ namespace CompileTimeEncryption {
             return a - b;
         }
 
-#define Divisible(a, b) ((a) % (b) == 0)
-
         template<size_t i>
         constexpr __forceinline T enc(const T c) const {
-#if 0
-            // xor swapped key and swapped index
-            if constexpr (Divisible(i + key, 14)) {
-                return xor (xor (c, swapChar(keys[i])), swapChar(i));
-            }
-
-            // xor swapped key characters then minus/plus index
-            if constexpr (Divisible(key, 13)) {
-                return sub(xor (c, swapChar(keys[i])), i);
-            }
-            if constexpr (Divisible(i + key, 12)) {
-                return add(xor (c, swapChar(keys[i])), i);
-            }
-            // xor swapped key and index
-            if constexpr (Divisible(key, 11)) {
-                return xor (xor (c, swapChar(keys[i])), i);
-            }
-            // xor swapped key
-            if constexpr (Divisible(i + key, 10)) {
-                return xor (c, swapChar(keys[i]));
-            }
-            // swap character
-            if constexpr (Divisible(key, 9)) {
-                return swapChar(c);
-            }
-
-            // minus/plus index then xor key
-            if constexpr (Divisible(i + key, 8)) {
-                return xor (sub(c, i), keys[i]);
-            }
-            if constexpr (Divisible(key, 7)) {
-                return xor (add(c, i), keys[i]);
-            }
-
-            // xor key then minus/plus index 
-            if constexpr (Divisible(i + key, 6)) {
-                return sub(xor (c, keys[i]), i);
-            }
-            if constexpr (Divisible(key, 5)) {
-                return add(xor (c, keys[i]), i);
-
-            }
-
-            // xor key and index
-            if constexpr (Divisible(i + key, 4)) {
-                return xor (xor (c, keys[i]), i);
-            }
-
-            // minus/plus index
-            if constexpr (Divisible(key, 3)) {
-                return sub(c, i);
-            }
-            if constexpr (Divisible(i + key, 2)) {
-                return add(c, i);
-            } else {
-                // default
-                return xor (c, keys[i]);
-            }
-#endif
-            return swapChar(add(xor(swapChar(c), swapChar(keys[i])), K));
+            return c ^ keys[i];
         }
 
-        // commented return in the select block: original cipher
-
-        __forceinline T dec(const T c, const int i) const {
-#if 0
-            // xor swapped key and swapped index
-            if (Divisible(i + keys[i], 14)) {
-                return xor (xor (c, swapChar(i)), swapChar(keys[i]));
-                // xor(xor(c, swapChar(keys[i])), i);
-            }
-
-            // xor swapped key characters then minus/plus index
-            if (Divisible(keys[i], 13)) {
-                return xor (add(c, i), swapChar(keys[i]));
-                // sub(xor(c, swapChar(keys[i])), i);
-            }
-            if (Divisible(i + keys[i], 12)) {
-                return xor (sub(c, i), swapChar(keys[i]));
-                // add(xor(c, swapChar(keys[i])), i);
-            }
-
-            // xor swapped key and index
-            if (Divisible(keys[i], 11)) {
-                return xor (xor (c, i), swapChar(keys[i]));
-                // xor(xor(c, swapChar(keys[i])), i);
-            }
-
-            // xor swapped key
-            if (Divisible(i + keys[i], 10)) {
-                return xor (c, swapChar(keys[i]));
-                // xor(c, swapChar(keys[i]));
-            }
-
-            // swap character
-            if (Divisible(keys[i], 9)) {
-                return swapChar(c);
-                // swapChar(c);
-            }
-
-            // minus/plus index then xor key
-            if (Divisible(i + keys[i], 8)) {
-                return add(xor (c, keys[i]), i);
-                // xor(sub(c, i), keys[i]);
-            }
-            if (Divisible(keys[i], 7)) {
-                return sub(xor (c, keys[i]), i);
-                // xor(add(c, i), keys[i]);
-            }
-
-            // xor key then minus/plus index 
-            if (Divisible(i + keys[i], 6)) {
-                return xor (add(c, i), keys[i]);
-                // sub(xor (c, keys[i]), i);
-            }
-            if (Divisible(keys[i], 5)) {
-                return xor (sub(c, i), keys[i]);
-                // add(xor (c, keys[i]), i);
-            }
-
-            // xor key and index
-            if (Divisible(i + keys[i], 4)) {
-                return xor (xor (c, i), keys[i]);
-                // xor(xor(c ^ keys[i]), i);
-            }
-
-            // minus/plus index
-            if (Divisible(keys[i], 3)) {
-                return add(c, i);
-                // sub(c, i)
-            }
-            if (Divisible(i + keys[i], 2)) {
-                return sub(c, i);
-                // add(c, i)
-            } else {
-                return xor (c, keys[i]);
-            }
-#endif
-            return swapChar(xor(sub(swapChar(c), K), swapChar(keys[i])));
-            // return swapChar(add(xor (swapChar(c), swapChar(keys[i])), K));
+        __forceinline T dec(const T c, const size_t i) const {
+            return c ^ keys[i];
         }
 
-#undef Divisible
     public:
         template <size_t... Is>
-        constexpr __forceinline XorString(const T (&str)[N], std::index_sequence<Is...>) :
-        keys{
+        constexpr __forceinline XorString(const T(&str)[N], std::index_sequence<Is...>) :
+        keys {
             Random<T, K + Is>()...
         },
-        _encrypted{ enc<Is>(str[Is])... } {
+            _encrypted{ enc<Is>(str[Is])... } {
+
+        }
+
+        template <size_t... Is>
+        constexpr __forceinline XorString(const std::array<T, N> arr, std::index_sequence<Is...>) :
+            keys {
+                Random<T, K + Is>()...
+            },
+            _encrypted{ enc<Is>(arr[Is])... } {
 
         }
 
@@ -248,31 +121,147 @@ namespace CompileTimeEncryption {
             for (size_t i = 0; i < N; ++i) {
                 _encrypted[i] = dec(_encrypted[i], i);
             }
-            _encrypted[N - 1] = '\0';
 
             return _encrypted.data();
+        }
+
+        __forceinline std::array<T, N> decryptArray(void) {
+            for (size_t i = 0; i < N; ++i) {
+                _encrypted[i] = dec(_encrypted[i], i);
+            }
+
+            return _encrypted;
         }
     };
 }
 
-#ifndef DEBUG
+template <class T>
+class xor_shared_string : public std::shared_ptr<T> {
+    size_t n = 0;
+
+public:
+    class iterator {
+    public:
+        typedef iterator self_type;
+        typedef T value_type;
+        typedef T& reference;
+        typedef T* pointer;
+        typedef std::forward_iterator_tag iterator_category;
+        typedef int difference_type;
+        iterator(pointer ptr) : ptr_(ptr) {}
+        self_type operator++() { self_type i = *this; ++ptr_; return i; }
+        self_type operator++(int junk) { ++ptr_; return *this; }
+        reference operator*() { return *ptr_; }
+        pointer operator->() { return ptr_; }
+        bool operator==(const self_type& rhs) { return ptr_ == rhs.ptr_; }
+        bool operator!=(const self_type& rhs) { return ptr_ != rhs.ptr_; }
+    private:
+        pointer ptr_;
+    };
+
+    class const_iterator {
+    public:
+        typedef const_iterator self_type;
+        typedef T value_type;
+        typedef T& reference;
+        typedef T* pointer;
+        typedef int difference_type;
+        typedef std::forward_iterator_tag iterator_category;
+        const_iterator(pointer ptr) : ptr_(ptr) {}
+        self_type operator++() { self_type i = *this; ++ptr_; return i; }
+        self_type operator++(int junk) { ++ptr_; return *this; }
+        const reference operator*() { return *ptr_; }
+        const pointer operator->() { return ptr_; }
+        bool operator==(const self_type& rhs) { return ptr_ == rhs.ptr_; }
+        bool operator!=(const self_type& rhs) { return ptr_ != rhs.ptr_; }
+    private:
+        pointer ptr_;
+    };
+
+
+    xor_shared_string(T *ptr) : std::shared_ptr<T>(ptr), n(strlen(ptr)) {
+
+    }
+
+    xor_shared_string(T *ptr, const size_t N) : std::shared_ptr<T>(ptr), n(N) {
+
+    }
+
+    operator T *() const {
+        return get();
+    }
+
+    constexpr auto c_str() const {
+        return get();
+    }
+
+    constexpr auto data() const {
+        return c_str();
+    }
+
+    constexpr auto length() const {
+        return n;
+    }
+
+    constexpr auto runtime_length() const {
+        return strlen(get());
+    }
+
+    constexpr auto size() const {
+        return length();
+    }
+
+    constexpr auto duplicate() const {
+        return xor_shared_string(_strdup(c_str()));
+    }
+};
+
+#if DEBUG == 0
+
+#ifndef array_encrypt_onetime
+#define array_encrypt_onetime(arr) \
+    (CompileTimeEncryption::XorString<char, (arr).size(), CompileTimeEncryption::Random<char, __COUNTER__>() >( \
+        (arr), std::make_index_sequence<(arr).size()>() \
+    ))
+#endif
 
 #ifndef text
-#define text(s) (std::string(CompileTimeEncryption::XorString<char, sizeof(s), CompileTimeEncryption::Random<char, __COUNTER__ + __LINE__ + sizeof(s)>() >( s, std::make_index_sequence<sizeof(s) - 1>() ).decrypt()))
+#define textonce(s) \
+    ((CompileTimeEncryption::XorString<char, sizeof(s), CompileTimeEncryption::Random<char, __COUNTER__>() >( \
+        s, std::make_index_sequence<(sizeof(s) / sizeof(char))>() \
+    )).decrypt())
+
+#define textdup(s) _strdup(textonce(s))
+#define textpp(s) (std::string(textonce(s)))
+#define text(s) ( xor_shared_string<const char>(textdup(s), sizeof(s) / sizeof(char) - 1) )
+
 #endif
 
 #ifndef textw
-#define textw(s) (std::wstring(CompileTimeEncryption::XorString<wchar_t, sizeof(s), CompileTimeEncryption::Random<wchar_t, __COUNTER__ + __LINE__ + sizeof(s), 512>() >( s, std::make_index_sequence<sizeof(s) - 1>() ).decrypt()))
+#define textwonce(s) \
+    ((CompileTimeEncryption::XorString<wchar_t, (sizeof(s) / sizeof(wchar_t)), CompileTimeEncryption::Random<wchar_t, __COUNTER__, 512>() >( \
+        s, std::make_index_sequence<(sizeof(s) / sizeof(wchar_t))>() \
+    )).decrypt())
+
+#define textwdup(s) _wcsdup(textwonce(s))
+#define textwpp(s) (std::wstring( textwonce(s) ))
+#define textw(s) ( xor_shared_string<const wchar_t>(textdup(s), sizeof(s) / sizeof(wchar_t) - 1) )
+
+// #define textw(s) (wcsdup(CompileTimeEncryption::XorString<wchar_t, sizeof(s), CompileTimeEncryption::Random<wchar_t, __COUNTER__ + __LINE__ + sizeof(s), 512>() >( s, std::make_index_sequence<sizeof(s)>() ).decrypt()))
 #endif
 
 #else
 
 #ifndef text
-#define text(s) (std::string(s))
+#define textdup _strdup
+#define textonce(s) (s)
+#define text(s) ( xor_shared_string<const char>(_strdup(s), (sizeof(s) / sizeof(char)) - 1) )
 #endif
 
 #ifndef textw
-#define textw(s) (std::wstring(s))
+#define textwdup _wcsdup
+#define textwonce(s) (s)
+#define textw(s) ( xor_shared_string<const wchar_t>(_wcsdup(s), (sizeof(s) / sizeof(wchar_t)) - 1) )
 #endif
 
 #endif

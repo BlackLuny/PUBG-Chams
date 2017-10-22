@@ -5,7 +5,6 @@
 #include <manager/HookManager.hpp>
 #include <manager/PatternManager.hpp>
 
-
 namespace {
     using namespace fmt::literals;
     using namespace SteveBase;
@@ -17,7 +16,7 @@ namespace {
 
         // GameHookManager::StopHook();
 
-#if DEBUG
+#if 0
         ShowWindow(GetConsoleWindow(), SW_HIDE);
         FreeConsole();
 #endif
@@ -34,14 +33,14 @@ namespace {
 
 #if DEBUG
         // MessageBox(nullptr, "SUCCESS", "", 0);
-        AllocConsole() ? freopen("CONOUT$", "w", stdout) : 0;
+        AllocConsole() ? freopen(text("CONOUT$").c_str(), "w", stdout) : 0;
 #endif
 
 #if RELEASE
         SystemUtility::RemovePeHeader((HANDLE)param);
         // SystemUtility::UnlinkModuleFromPEB((HMODULE)param);
 #endif
-        GameUtility::SetHackDirectory(SystemUtility::ProduceModulePath((HINSTANCE)param));
+        // GameUtility::SetHackDirectory(SystemUtility::ProduceModulePath((HINSTANCE)param));
 
         LoggerNotice("Hello World!");
 
@@ -49,10 +48,9 @@ namespace {
         Manager::HookManager::Init();
 
         LoggerNotice("All Set. Have A Nice Day!");
-        GameUtility::SetCheatRunning(true);
-        SetInterface<HMODULE>((HMODULE)param);
+        // GameUtility::SetCheatRunning(true);
 
-#if DEBUG
+#if 0
         while (GameUtility::GetCheatRunning() && !GetAsyncKeyState(VK_DELETE)) {
             Sleep(1000);
         }

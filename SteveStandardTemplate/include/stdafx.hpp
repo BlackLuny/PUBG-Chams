@@ -1,6 +1,6 @@
 #pragma once
 
-// #define DEBUG 0
+#define DEBUG 0
 #pragma warning(disable: 4996) // The POSIX name for this item is deprecated
 #pragma warning(disable: 4554)
 #pragma warning(disable: 4307) // integer overflow
@@ -16,7 +16,6 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
-#define _USE_MATH_DEFINES
 #define NOMINMAX
 
 // #pragma comment(lib, "vendor\\PolyHook-master\\Capstone\\msvc\\x64\\capstone.lib")
@@ -35,10 +34,7 @@
 #include <shlwapi.h>
 #include <tchar.h>
 #include <tlhelp32.h>
-
-
 #include <WinSock2.h>
-
 
 #include <array>
 #include <algorithm>
@@ -48,10 +44,8 @@
 #include <cstdint>
 #include <cstdlib>
 #include <ctime>
-// #include <experimental/generator>
 #include <fstream>
 #include <functional>
-// #include <future>
 #include <iostream>
 #include <limits>
 #include <locale>
@@ -68,21 +62,13 @@
 #include <variant>
 #include <vector>
 
-#include <vendor/debugbreak/debugbreak.h>
 #include <vendor/fmt/format.h>
-#include <vendor/hash/hash.h>
-// #include <vendor/nlohmann/json.hpp>
-#include <vendor/rang/include/rang.hpp>
 #include <vendor/XorStr/XorStr.h>
 #include <vendor/reflective_loader/loader.h>
-// #include <vendor/minhook/include/MinHook.h>
+#include <vendor/minhook/include/MinHook.h>
+#include <vendor/hash/hash.h>
 
-#include <misc/DataStructure.hpp>
-#include <misc/FunctionalProgramming.hpp>
-// #include <misc/IJsonSerializable.hpp>
-#include <misc/Macro.hpp>
-#include <misc/TemplateMetaprogramming.hpp>
 #include <misc/TypeAliases.hpp>
-
-#include <Interface.hpp>
-#include <Singleton.hpp>
+#include <misc/Macro.hpp>
+#include <misc/ProxiedClass.hpp>
+#include <misc/TemplateMetaprogramming.hpp>

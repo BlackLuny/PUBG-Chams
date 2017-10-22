@@ -23,15 +23,5 @@ constexpr static T forced_value_v = val;
 #define run_time_fnv1a_hash fnv1a
 #define compile_time_fnv1a_hash(s) forced_value_v<constexpr_hash_t, fnv1a(s)>
 
-
 #define run_time_hash run_time_fnv1a_hash
 #define compile_time_hash compile_time_fnv1a_hash
-
-template<class T>
-constexpr constexpr_hash_t MakeTypeHash() {
-#ifdef _MSC_VER
-    return compile_time_hash(__FUNCDNAME__);
-#else
-    return compile_time_hash(__PRETTY_FUNCTION__);
-#endif
-}
